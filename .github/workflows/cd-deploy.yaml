@@ -31,10 +31,16 @@ jobs:
     - name: Setup kubectl
       uses: azure/setup-kubectl@v4
 
-    - name: Write kubeconfig
+    - name: Setup kubeconfig
       run: |
-        echo "${{ secrets.KUBECONFIG }}" > kubeconfig
-        chmod 600 kubeconfig
+        mkdir -p ~/.kube
+        echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
+        chmod 600 ~/.kube/config
+
+    - name: Verify cluster access
+      run: |
+        kubectl cluster-info
+        kubectl get nodes
 
     - name: Deploy Backend
       env:
