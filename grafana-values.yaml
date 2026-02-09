@@ -1,0 +1,25 @@
+grafana:
+  replicas: 1
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  persistence:
+    enabled: false
+
+  securityContext:
+    runAsUser: 472
+    runAsGroup: 472
+    fsGroup: 472
+
+  sidecar:
+    dashboards:
+      enabled: false
+    datasources:
+      enabled: false
+

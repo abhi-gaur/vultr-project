@@ -1,0 +1,18 @@
+resources:
+- ../../base
+
+images:
+- name: blr.vultrcr.com/devopsassignment/backend
+  newTag: "1.2"
+- name: blr.vultrcr.com/devopsassignment/frontend
+  newTag: "1.1"
+
+patches:
+- target:
+    kind: Deployment
+    name: backend
+  patch: |
+    - op: replace
+      path: /spec/replicas
+      value: 3
+

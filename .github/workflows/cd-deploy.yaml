@@ -1,0 +1,56 @@
+name: CD - Deploy to Kubernetes
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  REGISTRY: blr.vultrcr.com/devopsassignment
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v4
+      with:
+        version: v1.29.0
+
+    - name: Configure kubeconfig
+      run: |
+        echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > kubeconfig
+        export KUBECONFIG=$PWD/kubeconfig
+
+    - name: Update image tags in Kustomize
+      run: |
+        cd apps/k8s/overlays/prod
+        kustomize edit set image \
+          blr.vultrcr.com/devopsassignment/backend=${{ env.REGISTRY }}/backend:${{ github.sha }}
+        kustomize edit set image \
+          blr.vultrcr.com/devopsassignment/frontend=${{ env.REGISTRY }}/frontend:${{ github.sha }}
+
+    - name: Deploy to cluster
+      run: |
+        kubectl apply -k apps/k8s/overlays/prod -n app
+
+    - name: Wait for rollout
+      run: |
+        kubectl rollout status deployment/backend -n app --timeout=120s
+        kubectl rollout status deployment/frontend -n app --timeout=120s
+
+    - name: Smoke Test Backend
+      run: |
+        kubectl run curl --rm -i --restart=Never \
+          --image=curlimages/curl \
+          -- curl http://backend.app.svc.cluster.local:8000/health
+
+    - name: Rollback on failure
+      if: failure()
+      run: |
+        kubectl rollout undo deployment/backend -n app
+        kubectl rollout undo deployment/frontend -n app
+
