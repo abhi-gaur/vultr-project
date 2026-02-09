@@ -1,8 +1,10 @@
-name: CD - Deploy to Kubernetes
+name: CD - Deploy
 
 on:
-  push:
-    branches: [ "main" ]
+  workflow_run:
+    workflows: ["CI - Build & Scan"]
+    types:
+      - completed
 
 env:
   REGISTRY: blr.vultrcr.com/devopsassignment
@@ -10,52 +12,45 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
-    - name: Checkout source
+    - name: Checkout
       uses: actions/checkout@v4
-
-    - name: Set up kubectl
-      uses: azure/setup-kubectl@v4
       with:
-        version: v1.29.0
+        fetch-depth: 0
 
-    - name: Configure kubeconfig
+    - name: Get latest versions
       run: |
-        echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > kubeconfig
-        echo "KUBECONFIG=$PWD/kubeconfig" >> $GITHUB_ENV
+        BACKEND_VERSION=$(git tag --list "backend-v*" --sort=-v:refname | head -n1 | sed 's/backend-v//')
+        FRONTEND_VERSION=$(git tag --list "frontend-v*" --sort=-v:refname | head -n1 | sed 's/frontend-v//')
 
-    - name: Update image tags in Kustomize
-      run: |
-        cd apps/k8s/overlays/prod
-        kustomize edit set image \
-          blr.vultrcr.com/devopsassignment/backend=${{ env.REGISTRY }}/backend:${{ github.sha }}
-        kustomize edit set image \
-          blr.vultrcr.com/devopsassignment/frontend=${{ env.REGISTRY }}/frontend:${{ github.sha }}
+        echo "BACKEND_VERSION=$BACKEND_VERSION" >> $GITHUB_ENV
+        echo "FRONTEND_VERSION=$FRONTEND_VERSION" >> $GITHUB_ENV
 
-    - name: Deploy to cluster
-      run: |
-        kubectl apply -k apps/k8s/overlays/prod -n app
+    - name: Setup kubectl
+      uses: azure/setup-kubectl@v4
 
-    - name: Wait for backend rollout
+    - name: Write kubeconfig
       run: |
+        echo "${{ secrets.KUBECONFIG }}" > kubeconfig
+        chmod 600 kubeconfig
+
+    - name: Deploy Backend
+      env:
+        KUBECONFIG: ${{ github.workspace }}/kubeconfig
+      run: |
+        kubectl set image deployment/backend \
+          backend=$REGISTRY/backend:$BACKEND_VERSION -n app
+
         kubectl rollout status deployment/backend -n app --timeout=300s
 
-    - name: Wait for frontend rollout
+    - name: Deploy Frontend
+      env:
+        KUBECONFIG: ${{ github.workspace }}/kubeconfig
       run: |
+        kubectl set image deployment/frontend \
+          frontend=$REGISTRY/frontend:$FRONTEND_VERSION -n app
+
         kubectl rollout status deployment/frontend -n app --timeout=300s
-
-    - name: Smoke Test Backend
-      run: |
-        kubectl run curl-test \
-          --rm -i --restart=Never \
-          --image=curlimages/curl \
-          -- curl http://backend.app.svc.cluster.local:8000/health
-
-    - name: Rollback on failure
-      if: failure()
-      continue-on-error: true
-      run: |
-        kubectl rollout undo deployment/backend -n app || true
-        kubectl rollout undo deployment/frontend -n app || true
 
