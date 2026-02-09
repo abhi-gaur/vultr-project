@@ -2,8 +2,14 @@ name: CI - Build and Scan Images
 
 on:
   pull_request:
+    paths:
+      - "apps/backend/**"
+      - "apps/frontend/**"
   push:
     branches: [ "main" ]
+    paths:
+      - "apps/backend/**"
+      - "apps/frontend/**"
 
 env:
   REGISTRY: blr.vultrcr.com/devopsassignment
@@ -15,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout source
       uses: actions/checkout@v4
 
     - name: Set up Docker Buildx
@@ -28,7 +34,7 @@ jobs:
         username: ${{ secrets.VULTR_CR_USERNAME }}
         password: ${{ secrets.VULTR_CR_PASSWORD }}
 
-    - name: Build Backend Image
+    - name: Build & Push Backend Image
       uses: docker/build-push-action@v5
       with:
         context: apps/backend
@@ -36,8 +42,10 @@ jobs:
         platforms: linux/amd64
         tags: |
           ${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE }}:${{ github.sha }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
-    - name: Build Frontend Image
+    - name: Build & Push Frontend Image
       uses: docker/build-push-action@v5
       with:
         context: apps/frontend
@@ -45,6 +53,8 @@ jobs:
         platforms: linux/amd64
         tags: |
           ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - name: Trivy Scan - Backend
       uses: aquasecurity/trivy-action@0.24.0

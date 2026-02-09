@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout source
       uses: actions/checkout@v4
 
     - name: Set up kubectl
@@ -23,7 +23,7 @@ jobs:
     - name: Configure kubeconfig
       run: |
         echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > kubeconfig
-        export KUBECONFIG=$PWD/kubeconfig
+        echo "KUBECONFIG=$PWD/kubeconfig" >> $GITHUB_ENV
 
     - name: Update image tags in Kustomize
       run: |
@@ -37,14 +37,18 @@ jobs:
       run: |
         kubectl apply -k apps/k8s/overlays/prod -n app
 
-    - name: Wait for rollout
+    - name: Wait for backend rollout
       run: |
-        kubectl rollout status deployment/backend -n app --timeout=120s
-        kubectl rollout status deployment/frontend -n app --timeout=120s
+        kubectl rollout status deployment/backend -n app --timeout=180s
+
+    - name: Wait for frontend rollout
+      run: |
+        kubectl rollout status deployment/frontend -n app --timeout=180s
 
     - name: Smoke Test Backend
       run: |
-        kubectl run curl --rm -i --restart=Never \
+        kubectl run curl-test \
+          --rm -i --restart=Never \
           --image=curlimages/curl \
           -- curl http://backend.app.svc.cluster.local:8000/health
 
