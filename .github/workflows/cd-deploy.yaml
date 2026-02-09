@@ -54,7 +54,8 @@ jobs:
 
     - name: Rollback on failure
       if: failure()
+      continue-on-error: true
       run: |
-        kubectl rollout undo deployment/backend -n app
-        kubectl rollout undo deployment/frontend -n app
+        kubectl rollout undo deployment/backend -n app || true
+        kubectl rollout undo deployment/frontend -n app || true
 
