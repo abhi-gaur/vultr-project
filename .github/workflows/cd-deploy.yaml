@@ -43,8 +43,6 @@ jobs:
         kubectl get nodes
 
     - name: Deploy Backend
-      env:
-        KUBECONFIG: ${{ github.workspace }}/kubeconfig
       run: |
         kubectl set image deployment/backend \
           backend=$REGISTRY/backend:$BACKEND_VERSION -n app
@@ -52,8 +50,6 @@ jobs:
         kubectl rollout status deployment/backend -n app --timeout=300s
 
     - name: Deploy Frontend
-      env:
-        KUBECONFIG: ${{ github.workspace }}/kubeconfig
       run: |
         kubectl set image deployment/frontend \
           frontend=$REGISTRY/frontend:$FRONTEND_VERSION -n app
