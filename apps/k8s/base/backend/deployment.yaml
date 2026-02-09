@@ -4,6 +4,14 @@ metadata:
   name: backend
 spec:
   replicas: 2
+  # --- FIX 1 START ---
+  minReadySeconds: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  # --- FIX 1 END ---
   selector:
     matchLabels:
       app: backend
@@ -45,20 +53,24 @@ spec:
           capabilities:
             drop: ["ALL"]
 
+        # --- FIX 2 START (Relaxed for CI) ---
         startupProbe:
           httpGet:
             path: /health
             port: 8000
           failureThreshold: 30
           periodSeconds: 5
+        # --- FIX 2 END ---
 
         livenessProbe:
           httpGet:
             path: /health
             port: 8000
+          # Optional but recommended: 
+          initialDelaySeconds: 5 
+          periodSeconds: 10
 
         readinessProbe:
           httpGet:
             path: /ready
             port: 8000
-

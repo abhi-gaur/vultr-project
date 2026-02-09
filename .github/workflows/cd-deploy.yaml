@@ -39,11 +39,11 @@ jobs:
 
     - name: Wait for backend rollout
       run: |
-        kubectl rollout status deployment/backend -n app --timeout=180s
+        kubectl rollout status deployment/backend -n app --timeout=300s
 
     - name: Wait for frontend rollout
       run: |
-        kubectl rollout status deployment/frontend -n app --timeout=180s
+        kubectl rollout status deployment/frontend -n app --timeout=300s
 
     - name: Smoke Test Backend
       run: |
