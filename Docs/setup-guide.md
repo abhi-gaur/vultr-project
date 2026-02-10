@@ -62,12 +62,15 @@ It is written to:
 
 ### Key Files
 
+
+```go
 infra/
 ├── main.tf
 ├── providers.tf
 ├── variables.tf
 ├── versions.tf
 ├── terraform.tfvars
+```
 
     cd infra
     terraform init
@@ -75,7 +78,6 @@ infra/
     terraform apply
 
 ### Output:
-[========]
 
 - Kubernetes API endpoint
 - Cluster ID
