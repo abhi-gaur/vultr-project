@@ -25,6 +25,11 @@ The assignment focuses on **real-world DevOps practices**:
 
 Grafana 
 
+```go
+user - admin
+pass - 8DPxvZNj35AXyPGmDp4n0yKfapW42hfky0EGVPLO
+```
+
 user - admin
 pass - 8DPxvZNj35AXyPGmDp4n0yKfapW42hfky0EGVPLO
 
