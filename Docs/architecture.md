@@ -2,23 +2,7 @@
 
 ## 1. High-Level System Architecture
 
-User
-│
-▼
-Public Internet
-│
-▼
-Vultr LoadBalancer
-│
-▼
-Istio Gateway (Gateway API)
-│
-├── / → Frontend Service (NGINX)
-│
-└── /api → Backend Service (FastAPI)
-│
-└── Databases (Postgres / Mongo / Redis)
-
+![Diagram](./arch)
 
 ---
 
@@ -52,21 +36,7 @@ Istio Gateway (Gateway API)
 
 ## 3. CI/CD Architecture
 
-Git Push
-│
-▼
-GitHub Actions (CI)
-├── Build Images
-├── Scan Vulnerabilities
-├── Push to Registry
-└── Tag Versions
-│
-▼
-GitHub Actions (CD)
-├── Update Deployments
-├── Rollout Verification
-└── Auto-fail on errors
-
+![Diagram](./cicd)
 
 ---
 
