@@ -223,6 +223,22 @@ Secrets Used
 - Secured with admin credentials
 - Exposed via Gateway API
 
+## Databases (Persistent & HA)
+
+The platform deploys three stateful databases using Kubernetes-native
+operators and Helm charts, all backed by persistent volumes.
+
+### PostgreSQL (CloudNativePG)
+- Deployed using CloudNativePG operator
+- Multi-instance PostgreSQL cluster
+- Persistent volumes via PVCs
+- Supports automatic failover and self-healing
+
+Verification:
+```bash
+kubectl get pods -n databases
+kubectl get pvc -n databases
+
 #### Learning
 
 ```go
