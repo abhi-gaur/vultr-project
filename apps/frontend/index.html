@@ -1,24 +1,220 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>DevOps Assignment</title>
-</head>
-<body>
-  <h1>Frontend is Running</h1>
+  <meta charset="UTF-8" />
+  <title>DevOps Assignment | Vultr Kubernetes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <h2>Backend Health</h2>
-  <pre id="output">Loading...</pre>
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      --card-bg: rgba(255, 255, 255, 0.08);
+      --text-primary: #ffffff;
+      --text-secondary: #cfd8dc;
+      --accent: #00e5ff;
+      --success: #4caf50;
+      --error: #ff5252;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg-gradient);
+      color: var(--text-primary);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 16px;
+    }
+
+    .container {
+      max-width: 900px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(10px);
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 12px;
+      color: var(--accent);
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .highlight {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: gray;
+      animation: pulse 1.5s infinite;
+    }
+
+    .dot.success {
+      background: var(--success);
+    }
+
+    .dot.error {
+      background: var(--error);
+    }
+
+    pre {
+      background: rgba(0, 0, 0, 0.35);
+      padding: 16px;
+      border-radius: 12px;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      color: #e0f7fa;
+      margin-top: 12px;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    footer span {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0% {
+        opacity: 0.6;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0.6;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- Hero Section -->
+    <div class="card">
+      <h1>🚀 DevOps Assignment – Live on Vultr Kubernetes</h1>
+      <p>
+        This project was a <span class="highlight">challenging yet exciting journey</span>
+        into modern DevOps practices — from infrastructure provisioning to secure,
+        scalable application delivery.
+      </p>
+      <p>
+        Along the way, I explored <span class="highlight">Vultr Cloud</span>,
+        <span class="highlight">Terraform</span>,
+        <span class="highlight">Kubernetes</span>,
+        <span class="highlight">Istio Ambient Mesh</span>,
+        and a complete <span class="highlight">CI/CD pipeline</span>.
+      </p>
+    </div>
+
+    <!-- Backend Status -->
+    <div class="card">
+      <h2>🩺 Backend Health Status</h2>
+      <div class="status">
+        <div id="statusDot" class="dot"></div>
+        <span id="statusText">Checking backend status…</span>
+      </div>
+      <pre id="output">Loading...</pre>
+    </div>
+
+    <!-- Appreciation -->
+    <div class="card">
+      <h2>🙏 A Note to the Stakeholders</h2>
+      <p>
+        Thank you for reviewing this assignment.
+        It pushed me to think deeply about <span class="highlight">production-grade
+        architectures</span>, reliability, and security.
+      </p>
+      <p>
+        The backend is up, the platform is stable, and everything is running
+        on a <span class="highlight">live Kubernetes cluster</span>.
+      </p>
+      <p>
+        ⭐ <strong>Hope you enjoy exploring this setup — and I’d truly appreciate your feedback!</strong>
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      Built with ❤️, ☕ and Kubernetes ⚙️ by <span>Abhishek</span>
+    </footer>
+
+  </div>
 
   <script>
     fetch('/api/health')
-      .then(res => res.json())
+      .then(response => {
+        if (!response.ok) throw new Error("Backend error");
+        return response.json();
+      })
       .then(data => {
         document.getElementById('output').textContent =
           JSON.stringify(data, null, 2);
+        document.getElementById('statusText').textContent =
+          "Backend is healthy and running";
+        document.getElementById('statusDot').classList.add('success');
       })
       .catch(err => {
         document.getElementById('output').textContent =
-          'Error calling backend';
+          "Unable to reach backend API";
+        document.getElementById('statusText').textContent =
+          "Backend is unreachable";
+        document.getElementById('statusDot').classList.add('error');
       });
   </script>
 </body>

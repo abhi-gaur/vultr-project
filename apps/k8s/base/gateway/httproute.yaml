@@ -9,6 +9,7 @@ spec:
     namespace: istio-system
 
   rules:
+  # Backend API
   - matches:
     - path:
         type: PathPrefix
@@ -23,6 +24,7 @@ spec:
     - name: backend
       port: 8000
 
+  # Frontend
   - matches:
     - path:
         type: PathPrefix
