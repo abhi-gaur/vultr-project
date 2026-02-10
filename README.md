@@ -30,9 +30,6 @@ user - admin
 pass - 8DPxvZNj35AXyPGmDp4n0yKfapW42hfky0EGVPLO
 ```
 
-user - admin
-pass - 8DPxvZNj35AXyPGmDp4n0yKfapW42hfky0EGVPLO
-
 ---
 
 ## 🧠 What This Project Demonstrates
