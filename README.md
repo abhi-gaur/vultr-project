@@ -101,15 +101,6 @@ The assignment focuses on **real-world DevOps practices**:
 
 ---
 
-## 🧩 Lessons Learned (Key Takeaways)
-
-- Real-world CI/CD failures are **normal** — fixing them is skill
-- Gateway API + Istio Ambient Mode simplifies traffic security
-- Multi-arch images are critical for modern clusters
-- Versioning & rollouts must be automated, not manual
-- Documentation matters as much as implementation
-
----
 
 ## 🙌 Final Note
 
