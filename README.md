@@ -23,6 +23,11 @@ The assignment focuses on **real-world DevOps practices**:
 | **Backend Readiness API** | `http://139.84.222.16/api/ready` |
 | **Grafana Dashboard** | `http://139.84.222.16/grafana` |
 
+Grafana 
+
+user - admin
+pass - 8DPxvZNj35AXyPGmDp4n0yKfapW42hfky0EGVPLO
+
 ---
 
 ## 🧠 What This Project Demonstrates
