@@ -2,7 +2,7 @@
 
 ## 1. High-Level System Architecture
 
-![Diagram](./arch)
+![Diagram](./arch.png)
 
 ---
 
@@ -36,7 +36,7 @@
 
 ## 3. CI/CD Architecture
 
-![Diagram](./cicd)
+![Diagram](./cicd.png)
 
 ---
 

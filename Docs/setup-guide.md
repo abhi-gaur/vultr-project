@@ -62,12 +62,15 @@ It is written to:
 
 ### Key Files
 
+
+```go
 infra/
 ├── main.tf
 ├── providers.tf
 ├── variables.tf
 ├── versions.tf
 ├── terraform.tfvars
+```
 
     cd infra
     terraform init
@@ -75,7 +78,6 @@ infra/
     terraform apply
 
 ### Output:
-[========]
 
 - Kubernetes API endpoint
 - Cluster ID
@@ -220,6 +222,22 @@ Secrets Used
 - Deployed via Helm
 - Secured with admin credentials
 - Exposed via Gateway API
+
+## Databases (Persistent & HA)
+
+The platform deploys three stateful databases using Kubernetes-native
+operators and Helm charts, all backed by persistent volumes.
+
+### PostgreSQL (CloudNativePG)
+- Deployed using CloudNativePG operator
+- Multi-instance PostgreSQL cluster
+- Persistent volumes via PVCs
+- Supports automatic failover and self-healing
+
+Verification:
+```bash
+kubectl get pods -n databases
+kubectl get pvc -n databases
 
 #### Learning
 

@@ -23,6 +23,13 @@ The assignment focuses on **real-world DevOps practices**:
 | **Backend Readiness API** | `http://139.84.222.16/api/ready` |
 | **Grafana Dashboard** | `http://139.84.222.16/grafana` |
 
+Grafana 
+
+```go
+user - admin
+pass - 8DPxvZNj35AXyPGmDp4n0yKfapW42hfky0EGVPLO
+```
+
 ---
 
 ## 🧠 What This Project Demonstrates
@@ -48,7 +55,7 @@ The assignment focuses on **real-world DevOps practices**:
 - **Secrets:** Kubernetes Secrets (Vault ready)
 
 📘 Detailed architecture diagrams and flows are documented in  
-➡ **[docs/architecture.md](docs/architecture.md)**
+➡ **[Docs/architecture.md](Docs/architecture.md)**
 
 ---
 
@@ -61,7 +68,7 @@ The assignment focuses on **real-world DevOps practices**:
 - HPA, PDB, resource limits, and security contexts
 
 📘 Full setup and operational guide available at  
-➡ **[docs/setup-guide.md](docs/setup-guide.md)**
+➡ **[Docs/setup-guide.md](Docs/setup-guide.md)**
 
 ---
 
