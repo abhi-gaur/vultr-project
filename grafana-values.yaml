@@ -22,8 +22,20 @@ grafana:
     runAsGroup: 472
     fsGroup: 472
 
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: Prometheus
+          type: prometheus
+          access: proxy
+          url: http://monitoring-kube-prometheus-prometheus.observability.svc:9090
+          isDefault: true
+          editable: false
+
   sidecar:
     dashboards:
       enabled: false
     datasources:
-      enabled: false
+      enabled: false   
+
